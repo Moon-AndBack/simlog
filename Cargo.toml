@@ -1,5 +1,5 @@
 [package]
-name = "flog"
+name = "simlog"
 version = "1.0.0"
 authors = ["lingtian-xue <lingtian-xue@outlook.com>"]
 edition = "2018"

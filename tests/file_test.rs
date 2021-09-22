@@ -1,6 +1,6 @@
 use std::{fs::{self, read_dir, File, OpenOptions}, io::Write, path::{self, Path}, thread, time};
 
-use flog::Log;
+use simlog::Log;
 
 #[test]
 fn file_1() {
