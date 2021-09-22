@@ -1,8 +1,6 @@
-use std::{
-    fs::{self, read_dir, File, OpenOptions},
-    io::Write,
-    path::{self, Path},
-};
+use std::{fs::{self, read_dir, File, OpenOptions}, io::Write, path::{self, Path}, thread, time};
+
+use flog::Log;
 
 #[test]
 fn file_1() {
@@ -15,4 +13,17 @@ fn file_1() {
 
     x.write("aaaaaa".as_bytes());
     // x.write_all(buf);
+}
+
+#[test]
+fn file_2() {
+    let x = Log::new("./log".to_string(), true);
+    loop {
+        thread::sleep(time::Duration::from_secs(2));
+        x.debug(&x);
+        x.info(&x);
+        x.warn(&x);
+        x.error(&x);
+        x.fatal(&x);
+    }
 }

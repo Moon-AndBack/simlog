@@ -1,4 +1,3 @@
-use time;
 use chrono::{DateTime, Local, Utc};
 
 #[test]
