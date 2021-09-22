@@ -14,5 +14,5 @@ fn file_1() {
         .unwrap();
 
     x.write("aaaaaa".as_bytes());
-    x.write_all(buf)
+    // x.write_all(buf);
 }
