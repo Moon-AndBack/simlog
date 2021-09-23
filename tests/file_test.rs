@@ -1,4 +1,9 @@
-use std::{fs::{self, read_dir, File, OpenOptions}, io::Write, path::{self, Path}, thread, time};
+use std::{
+    fs::{self, read_dir, File, OpenOptions},
+    io::Write,
+    path::{self, Path},
+    thread, time,
+};
 
 use simlog::Log;
 

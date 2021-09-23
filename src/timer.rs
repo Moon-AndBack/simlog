@@ -1,7 +1,7 @@
-use chrono::{Local};
+use chrono::Local;
 
 // 获取本机时间
-pub fn get_local_time() ->Option<String> {
+pub fn get_local_time() -> Option<String> {
     let utc: String = Local::now().to_string();
     if utc.contains(".") {
         let str_temp: Vec<&str> = utc.split(".").collect();
@@ -10,10 +10,10 @@ pub fn get_local_time() ->Option<String> {
                 let temp = str.to_string();
                 let res = temp.replace("T", " ");
                 Some(res)
-            },
+            }
             None => None,
         }
-    }else {
+    } else {
         None
     }
 }

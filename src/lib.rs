@@ -145,8 +145,16 @@ where
         Some(temp) => temp.red(),
         None => String::from("****-**-** **-**-**").red(),
     };
-    let out_temp = format(format_args!("[{}]-[{}]: {}\n", datatime, color_str, content));
-    let out_temp_file = format(format_args!("[{}]-[{}]: {}\n", datatime.clear(), color_str.clear(), content));
+    let out_temp = format(format_args!(
+        "[{}]-[{}]: {}\n",
+        datatime, color_str, content
+    ));
+    let out_temp_file = format(format_args!(
+        "[{}]-[{}]: {}\n",
+        datatime.clear(),
+        color_str.clear(),
+        content
+    ));
 
     let arc_temp = Arc::clone(&LOG_FILE);
     let mut file_temp = arc_temp.lock().unwrap();
@@ -170,7 +178,7 @@ fn auto_seg_file() {
     let mut_temp = arc_temp.read().unwrap();
     if *mut_temp {
         loop {
-            thread::sleep(time::Duration::from_secs(59));
+            thread::sleep(time::Duration::from_millis(59000));
             match get_local_time() {
                 Some(s) => {
                     if s.contains("00:00:") {
@@ -179,11 +187,12 @@ fn auto_seg_file() {
 
                         let arc_temp1 = Arc::clone(&PATH_FILE);
                         let mut_temp1 = arc_temp1.read().unwrap();
-                        
+
                         match create_file(mut_temp1.to_string()) {
                             Some(f) => *mut_temp = f,
                             None => {}
                         }
+                        thread::sleep(time::Duration::from_millis(1000));
                     }
                 }
                 None => {}
