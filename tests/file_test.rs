@@ -13,7 +13,7 @@ fn file_1() {
         .write(true)
         .read(true)
         .create(true)
-        .open("a.log")
+        .open("./log/12.log")
         .unwrap();
 
     x.write("aaaaaa".as_bytes());
@@ -23,12 +23,12 @@ fn file_1() {
 #[test]
 fn file_2() {
     let x = Log::new("./log".to_string(), true);
-    loop {
-        thread::sleep(time::Duration::from_secs(2));
-        x.debug(&x);
-        x.info(&x);
-        x.warn(&x);
-        x.error(&x);
-        x.fatal(&x);
-    }
+    // loop {
+    //     thread::sleep(time::Duration::from_secs(2));
+    x.debug(&x);
+    x.info(&x);
+    x.warn(&x);
+    x.error(&x);
+    x.fatal(&x);
+    // }
 }

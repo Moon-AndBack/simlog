@@ -21,7 +21,7 @@ extern crate lazy_static;
 const FILE_SUF: &str = "log";
 
 lazy_static::lazy_static! {
-    pub static ref LOG_FILE: Arc<Mutex<File>> = Arc::new(Mutex::new(File::create("flog.lock").unwrap()));
+    pub static ref LOG_FILE: Arc<Mutex<File>> = Arc::new(Mutex::new(File::create("simlog.lock").unwrap()));
     pub static ref IF_FILE: Arc<RwLock<bool>> = Arc::new(RwLock::new(true));
     pub static ref PATH_FILE: Arc<RwLock<String>> = Arc::new(RwLock::new(String::new()));
 
