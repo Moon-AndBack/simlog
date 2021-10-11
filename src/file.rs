@@ -6,8 +6,8 @@ use crate::timer::*;
 use colored::Colorize;
 
 // 创建文件
-pub fn create_file(path: String) -> Option<File> {
-    match fs::create_dir_all(path.clone()) {
+pub fn create_file(path: &str) -> Option<File> {
+    match fs::create_dir_all(path) {
         Ok(_) => {}
         Err(_) => {
             let temp = "create file path failed!".red();
@@ -19,7 +19,7 @@ pub fn create_file(path: String) -> Option<File> {
         let str_temp = get_file_path(path, str_temp, crate::FILE_SUF.to_string());
         let path_temp = Path::new(&str_temp);
         let a = fs::OpenOptions::new()
-            .write(true)
+            .append(true)
             .read(true)
             .create(true)
             .open(path_temp);
@@ -41,7 +41,7 @@ pub fn create_file(path: String) -> Option<File> {
 }
 
 // 文件路径拼接
-fn get_file_path(path: String, file_name: String, file_suf: String) -> String {
-    let file_name = file_name.replace(":", "-");
-    format(format_args!("{}/{}.{}", path, file_name, file_suf))
+fn get_file_path(path: &str, file_name: String, file_suf: String) -> String {
+    let file_name: Vec<&str> = file_name.split(" ").collect();
+    format(format_args!("{}/{}.{}", path, file_name.get(0).unwrap().to_string(), file_suf))
 }

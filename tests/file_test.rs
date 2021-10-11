@@ -22,7 +22,7 @@ fn file_1() {
 
 #[test]
 fn file_2() {
-    let x = Log::new("./log".to_string(), true);
+    let x = Log::new("./log", true);
     // loop {
     //     thread::sleep(time::Duration::from_secs(2));
     x.debug(&x);

@@ -1,6 +1,6 @@
 [package]
 name = "simlog"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["lingtian-xue <lingtian-xue@outlook.com>"]
 edition = "2018"
 description = "这是一个开箱即用的日志组件"
