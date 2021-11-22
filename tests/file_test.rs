@@ -1,34 +1,16 @@
-use std::{
-    fs::{self, read_dir, File, OpenOptions},
-    io::Write,
-    path::{self, Path},
-    thread, time,
-};
-
 use simlog::Log;
 
 #[test]
-fn file_1() {
-    let mut x = fs::OpenOptions::new()
-        .write(true)
-        .read(true)
-        .create(true)
-        .open("./log/12.log")
-        .unwrap();
-
-    x.write("aaaaaa".as_bytes());
-    // x.write_all(buf);
-}
-
-#[test]
 fn file_2() {
-    let x = Log::new("./log", true);
-    // loop {
-    //     thread::sleep(time::Duration::from_secs(2));
-    x.debug(&x);
-    x.info(&x);
-    x.warn(&x);
-    x.error(&x);
-    x.fatal(&x);
-    // }
+    let a = chrono::offset::Local::now().timestamp_subsec_nanos();
+    let log = Log::new("./log", "error", true);
+    let temp_str = "todo!";
+
+    log.debug(temp_str);
+    log.info(temp_str);
+    log.warn(temp_str);
+    log.error(temp_str);
+    log.fatal(temp_str);
+    let b = chrono::offset::Local::now().timestamp_subsec_nanos();
+    println!("{}", b - a);
 }

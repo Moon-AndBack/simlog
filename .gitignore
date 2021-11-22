@@ -1,2 +1,5 @@
 /log
 /simlog.lock
+/target
+.vscode
+.idea
