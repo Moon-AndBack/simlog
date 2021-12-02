@@ -102,14 +102,15 @@ impl Log {
     where
         T: Display,
     {
+        let fn_name = function!();
         let temp = "DEBUG".blue();
         if let Some(file_temp) = &self.log_file {
             if let LEVEL::DEBUG = self.level {
                 let arc_temp = Arc::clone(file_temp);
-                opt(self.out_display, arc_temp, temp, content);
+                opt(fn_name, self.out_display, arc_temp, temp, content);
             }
         } else {
-            opt_no_file(temp, content);
+            opt_no_file(fn_name, temp, content);
         }
     }
 
@@ -117,14 +118,15 @@ impl Log {
     where
         T: Display,
     {
+        let fn_name = function!();
         let temp = "INFO".green();
         if let Some(file_temp) = &self.log_file {
             if let LEVEL::DEBUG | LEVEL::INFO = self.level {
                 let arc_temp = Arc::clone(file_temp);
-                opt(self.out_display, arc_temp, temp, content);
+                opt(fn_name, self.out_display, arc_temp, temp, content);
             }
         } else {
-            opt_no_file(temp, content);
+            opt_no_file(fn_name, temp, content);
         }
     }
 
@@ -132,14 +134,15 @@ impl Log {
     where
         T: Display,
     {
+        let fn_name = function!();
         let temp = "WARNING".yellow();
         if let Some(file_temp) = &self.log_file {
             if let LEVEL::WARN | LEVEL::INFO | LEVEL::DEBUG = self.level {
                 let arc_temp = Arc::clone(file_temp);
-                opt(self.out_display, arc_temp, temp, content);
+                opt(fn_name, self.out_display, arc_temp, temp, content);
             }
         } else {
-            opt_no_file(temp, content);
+            opt_no_file(fn_name, temp, content);
         }
     }
 
@@ -147,14 +150,15 @@ impl Log {
     where
         T: Display,
     {
+        let fn_name = function!();
         let temp = "ERROR".red();
         if let Some(file_temp) = &self.log_file {
             if let LEVEL::ERROR | LEVEL::WARN | LEVEL::INFO | LEVEL::DEBUG = self.level {
                 let arc_temp = Arc::clone(file_temp);
-                opt(self.out_display, arc_temp, temp, content);
+                opt(fn_name, self.out_display, arc_temp, temp, content);
             }
         } else {
-            opt_no_file(temp, content);
+            opt_no_file(fn_name, temp, content);
         }
     }
 
@@ -162,14 +166,15 @@ impl Log {
     where
         T: Display,
     {
+        let fn_name = function!();
         let temp = "FATAL".black();
         if let Some(file_temp) = &self.log_file {
             if let LEVEL::FATAL | LEVEL::ERROR | LEVEL::WARN | LEVEL::INFO | LEVEL::DEBUG = self.level {
                 let arc_temp = Arc::clone(file_temp);
-                opt(self.out_display, arc_temp, temp, content);
+                opt(fn_name, self.out_display, arc_temp, temp, content);
             }
         } else {
-            opt_no_file(temp, content);
+            opt_no_file(fn_name, temp, content);
         }
     }
 }
@@ -187,7 +192,7 @@ fn set_level(level: &str) -> LEVEL {
 
 // FIXME: 有需要解决的unwrap
 // 打印和输出
-fn opt<T>(out_display: bool, log_file: Arc<Mutex<File>>, color_str: ColoredString, content: T)
+fn opt<T>(fn_name: &str, out_display: bool, log_file: Arc<Mutex<File>>, color_str: ColoredString, content: T)
 where
     T: Display,
 {
@@ -196,8 +201,6 @@ where
     } else {
         String::from("****-**-** **-**-**").red()
     };
-
-    let fn_name = function!();
 
     let out_temp = format(format_args!(
         "[{}]-[{}]-[{}]: {}\n",
@@ -222,7 +225,7 @@ where
     }
 }
 
-fn opt_no_file<T>(color_str: ColoredString, content: T)
+fn opt_no_file<T>(fn_name: &str, color_str: ColoredString, content: T)
 where
     T: Display,
 {
@@ -231,8 +234,6 @@ where
     } else {
         String::from("****-**-** **-**-**").red()
     };
-
-    let fn_name = function!();
 
     let out_temp = format(format_args!(
         "[{}]-[{}]-[{}]: {}\n",
