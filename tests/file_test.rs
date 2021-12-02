@@ -3,7 +3,7 @@ use simlog::Log;
 #[test]
 fn file_2() {
     let a = chrono::offset::Local::now().timestamp_subsec_nanos();
-    let log = Log::new("./log", "error", true);
+    let log = Log::new("", "error", true);
     let temp_str = "todo!";
 
     log.debug(temp_str);

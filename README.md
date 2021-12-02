@@ -19,6 +19,9 @@ log.fatal(temp_str);
 
 ## 更新日志
 
+- v2.0.</br>
+    显示被调用函数名
+
 - v2.0.0</br>
     添加日志记录级别，new函数需要新的参数所以并不能向下兼容！</br>
     目前支持的级别：debug, info, warn, error, fatal

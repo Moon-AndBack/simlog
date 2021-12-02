@@ -46,7 +46,7 @@ where
         "[{}]-[{}]: {}\n",
         datatime, color_str, content
     ));
-    eprintln!("{}", out_temp);
+    eprint!("{}", out_temp);
 }
 
 // 文件路径拼接

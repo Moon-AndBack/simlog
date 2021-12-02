@@ -30,6 +30,17 @@ enum LEVEL {
     NONE,
 }
 
+macro_rules! function {
+    () => {{
+        fn f() {}
+        fn type_name_of<T>(_: T) -> &'static str {
+            std::any::type_name::<T>()
+        }
+        let name = type_name_of(f);
+        &name[..name.len() - 3]
+    }}
+}
+
 /// # Simlog
 ///
 #[derive(Debug)]
@@ -185,13 +196,17 @@ where
     } else {
         String::from("****-**-** **-**-**").red()
     };
+
+    let fn_name = function!();
+
     let out_temp = format(format_args!(
-        "[{}]-[{}]: {}\n",
-        datatime, color_str, content
+        "[{}]-[{}]-[{}]: {}\n",
+        datatime, fn_name, color_str, content
     ));
     let out_temp_file = format(format_args!(
-        "[{}]-[{}]: {}\n",
+        "[{}]-[{}]-[{}]: {}\n",
         datatime.clear(),
+        fn_name,
         color_str.clear(),
         content
     ));
@@ -216,11 +231,13 @@ where
     } else {
         String::from("****-**-** **-**-**").red()
     };
+
+    let fn_name = function!();
+
     let out_temp = format(format_args!(
-        "[{}]-[{}]: {}\n",
-        datatime, color_str, content
+        "[{}]-[{}]-[{}]: {}\n",
+        datatime, fn_name, color_str, content
     ));
 
-    let failed = "FILE FAILED!".red();
-    eprint!("[{}]-{}", &failed, &out_temp);
+    eprint!("{}", &out_temp);
 }
