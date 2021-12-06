@@ -5,28 +5,34 @@
 ## 例子
 
 ```rust
-use simlog::Log;
-//".log": 日志文件路径, "debug": 日志记录级别, true: 控制台打印
-let log = Log::new("./log", "debug", true);
-let temp_str = "todo!";
+use simlog::{Log, Level};
 
-log.debug(temp_str);
-log.info(temp_str);
-log.warn(temp_str);
-log.error(temp_str);
-log.fatal(temp_str);
+#[test]
+fn log() {
+    // 路径留空关闭文件输出 Log::new("", Level::Debug, true);
+    // 使用None级别关闭日志 Log::new("log", Level::None, true);
+    // 使用false关闭控制台打印 Log::new("log", Level::Debug, false);
+    let log = Log::new("log", Level::Debug, true);
+    let temp_str = "todo!";
+
+    log.debug(format!("{}", temp_str));
+    log.info(format!("{}", temp_str));
+    log.warn(format!("{}", temp_str));
+    log.error(format!("{}", temp_str));
+    log.fatal(format!("{}", temp_str));
+}
 ```
 
 ## 更新日志
 
-- v2.0.2</br>
-    显示被调用函数名
+- v3.0.0</br>
+    一些优化
 
 - v2.0.0</br>
-    添加日志记录级别，new函数需要新的参数所以并不能向下兼容！</br>
+    添加日志记录级别</br>
     目前支持的级别：debug, info, warn, error, fatal
 
 
 - v1.0.3</br>
     <p>
-    修改日志文件名称规则，现在以日为单位。修复了windows下无法运行的问题，修改了Log的整体结构，去除过多的全局变量运行更加轻量。程序内置一条数量为1的线程池用来分割日志文件</p>
+    修改日志文件名称规则，现在以日为单位。修复了windows下无法运行的问题，修改了Log的整体结构</p>

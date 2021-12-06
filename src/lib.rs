@@ -5,7 +5,7 @@ pub(crate) mod timer;
 use colored::{ColoredString, Colorize};
 use file::create_file;
 use std::{
-    fmt::{format, Display},
+    fmt::{Display},
     fs::File,
     io::Write,
     sync::{Arc, Mutex},
@@ -20,25 +20,14 @@ extern crate rusty_pool;
 
 const FILE_SUF: &str = "log";
 
-#[derive(Debug)]
-enum LEVEL {
-    INFO,
-    DEBUG,
-    WARN,
-    ERROR,
-    FATAL,
-    NONE,
-}
-
-macro_rules! function {
-    () => {{
-        fn f() {}
-        fn type_name_of<T>(_: T) -> &'static str {
-            std::any::type_name::<T>()
-        }
-        let name = type_name_of(f);
-        &name[..name.len() - 3]
-    }}
+#[derive(Debug, PartialEq, PartialOrd)]
+pub enum Level {
+    Debug,
+    Info,
+    Warn,
+    Error,
+    Fatal,
+    None,
 }
 
 /// # Simlog
@@ -48,7 +37,7 @@ pub struct Log {
     file_path: &'static str,
     pub out_display: bool,
     log_file: Option<Arc<Mutex<File>>>,
-    level: LEVEL,
+    level: Level,
 }
 
 impl Display for Log {
@@ -62,8 +51,8 @@ impl Display for Log {
 }
 
 impl Log {
-    pub fn new(file_path: &'static str, level: &'static str, out_display: bool) -> Log {
-        let level = set_level(level);
+    pub fn new(file_path: &'static str, level: Level, out_display: bool) -> Log {
+        // let level = set_level(level);
         if let Some(temp) = create_file(file_path) {
             let temp = Arc::new(Mutex::new(temp));
             let temp_1 = Arc::clone(&temp);
@@ -98,102 +87,95 @@ impl Log {
         }
     }
 
-    pub fn debug<T>(&self, content: T)
+    pub fn debug<T>(&self, format: T)
     where
         T: Display,
     {
-        let fn_name = function!();
         let temp = "DEBUG".blue();
-        if let Some(file_temp) = &self.log_file {
-            if let LEVEL::DEBUG = self.level {
+
+        if self.level <= Level::Debug {
+            if let Some(file_temp) = &self.log_file {
                 let arc_temp = Arc::clone(file_temp);
-                opt(fn_name, self.out_display, arc_temp, temp, content);
+                out_put_log(self.out_display, arc_temp, temp, format);
+            } else {
+                out_put_log_no_log_file(temp, format);
             }
-        } else {
-            opt_no_file(fn_name, temp, content);
         }
     }
 
-    pub fn info<T>(&self, content: T)
+    pub fn info<T>(&self, format: T)
     where
         T: Display,
     {
-        let fn_name = function!();
         let temp = "INFO".green();
-        if let Some(file_temp) = &self.log_file {
-            if let LEVEL::DEBUG | LEVEL::INFO = self.level {
+
+        if self.level <= Level::Info {
+            if let Some(file_temp) = &self.log_file {
                 let arc_temp = Arc::clone(file_temp);
-                opt(fn_name, self.out_display, arc_temp, temp, content);
+                out_put_log(self.out_display, arc_temp, temp, format);
+            } else {
+                out_put_log_no_log_file(temp, format);
             }
-        } else {
-            opt_no_file(fn_name, temp, content);
         }
     }
 
-    pub fn warn<T>(&self, content: T)
+    pub fn warn<T>(&self, format: T)
     where
         T: Display,
     {
-        let fn_name = function!();
         let temp = "WARNING".yellow();
-        if let Some(file_temp) = &self.log_file {
-            if let LEVEL::WARN | LEVEL::INFO | LEVEL::DEBUG = self.level {
+
+        if self.level <= Level::Warn {
+            if let Some(file_temp) = &self.log_file {
                 let arc_temp = Arc::clone(file_temp);
-                opt(fn_name, self.out_display, arc_temp, temp, content);
+                out_put_log(self.out_display, arc_temp, temp, format);
+            } else {
+                out_put_log_no_log_file(temp, format);
             }
-        } else {
-            opt_no_file(fn_name, temp, content);
         }
     }
 
-    pub fn error<T>(&self, content: T)
+    pub fn error<T>(&self, format: T)
     where
         T: Display,
     {
-        let fn_name = function!();
         let temp = "ERROR".red();
-        if let Some(file_temp) = &self.log_file {
-            if let LEVEL::ERROR | LEVEL::WARN | LEVEL::INFO | LEVEL::DEBUG = self.level {
+
+        if self.level <= Level::Error {
+            if let Some(file_temp) = &self.log_file {
                 let arc_temp = Arc::clone(file_temp);
-                opt(fn_name, self.out_display, arc_temp, temp, content);
+                out_put_log(self.out_display, arc_temp, temp, format);
+            } else {
+                out_put_log_no_log_file(temp, format);
             }
-        } else {
-            opt_no_file(fn_name, temp, content);
         }
     }
 
-    pub fn fatal<T>(&self, content: T)
+    pub fn fatal<T>(&self, format: T)
     where
         T: Display,
     {
-        let fn_name = function!();
         let temp = "FATAL".black();
-        if let Some(file_temp) = &self.log_file {
-            if let LEVEL::FATAL | LEVEL::ERROR | LEVEL::WARN | LEVEL::INFO | LEVEL::DEBUG = self.level {
+        if self.level <= Level::Fatal {
+            if let Some(file_temp) = &self.log_file {
                 let arc_temp = Arc::clone(file_temp);
-                opt(fn_name, self.out_display, arc_temp, temp, content);
+                out_put_log(self.out_display, arc_temp, temp, format);
+            } else {
+                out_put_log_no_log_file(temp, format);
             }
-        } else {
-            opt_no_file(fn_name, temp, content);
         }
     }
-}
 
-fn set_level(level: &str) -> LEVEL {
-    match level {
-        "info" => LEVEL::INFO,
-        "debug" => LEVEL::DEBUG,
-        "warn" => LEVEL::WARN,
-        "error" => LEVEL::ERROR,
-        "fatal" => LEVEL::FATAL,
-        _ => LEVEL::NONE,
-    }
 }
 
 // FIXME: 有需要解决的unwrap
 // 打印和输出
-fn opt<T>(fn_name: &str, out_display: bool, log_file: Arc<Mutex<File>>, color_str: ColoredString, content: T)
-where
+fn out_put_log<T>(
+    out_display: bool,
+    log_file: Arc<Mutex<File>>,
+    color_str: ColoredString,
+    content: T,
+) where
     T: Display,
 {
     let datatime = if let Some(temp) = get_local_time() {
@@ -202,17 +184,16 @@ where
         String::from("****-**-** **-**-**").red()
     };
 
-    let out_temp = format(format_args!(
-        "[{}]-[{}]-[{}]: {}\n",
-        datatime, fn_name, color_str, content
-    ));
-    let out_temp_file = format(format_args!(
-        "[{}]-[{}]-[{}]: {}\n",
+    let out_temp = format!(
+        "[{}]-[{}]: {}\n",
+        datatime, color_str, content
+    );
+    let out_temp_file = format!(
+        "[{}]-[{}]: {}\n",
         datatime.clear(),
-        fn_name,
         color_str.clear(),
         content
-    ));
+    );
 
     let arc_temp = Arc::clone(&log_file);
     let mut file_temp = arc_temp.lock().unwrap();
@@ -225,7 +206,7 @@ where
     }
 }
 
-fn opt_no_file<T>(fn_name: &str, color_str: ColoredString, content: T)
+fn out_put_log_no_log_file<T>(color_str: ColoredString, content: T)
 where
     T: Display,
 {
@@ -235,10 +216,10 @@ where
         String::from("****-**-** **-**-**").red()
     };
 
-    let out_temp = format(format_args!(
-        "[{}]-[{}]-[{}]: {}\n",
-        datatime, fn_name, color_str, content
-    ));
+    let out_temp = format!(
+        "[{}]-[{}]: {}\n",
+        datatime, color_str, content
+    );
 
     eprint!("{}", &out_temp);
 }
